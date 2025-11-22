@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import authService from '../services/authService';
 
 const Container = styled.div`
   display: flex;
@@ -64,6 +65,12 @@ const Button = styled.button`
   }
 `;
 
+const ErrorMessage = styled.div`
+  color: red;
+  margin-bottom: 1rem;
+  text-align: center;
+`;
+
 const FooterText = styled.p`
   text-align: center;
   margin-top: 1rem;
@@ -72,54 +79,63 @@ const FooterText = styled.p`
 `;
 
 const Login = () => {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Login data:', formData);
-        // Add login logic here
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
+      await authService.login(formData);
+      navigate('/dashboard');
+      window.location.reload(); // Simple way to update auth state in Navbar
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+    }
+  };
 
-    return (
-        <Container>
-            <FormWrapper>
-                <Title>Login to Hawo</Title>
-                <form onSubmit={handleSubmit}>
-                    <InputGroup>
-                        <Label>Email</Label>
-                        <Input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </InputGroup>
-                    <InputGroup>
-                        <Label>Password</Label>
-                        <Input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </InputGroup>
-                    <Button type="submit">Login</Button>
-                </form>
-                <FooterText>
-                    Don't have an account? <Link to="/register">Sign up</Link>
-                </FooterText>
-            </FormWrapper>
-        </Container>
-    );
+  return (
+    <Container>
+      <FormWrapper>
+        <Title>Login to Hawo</Title>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+        <form onSubmit={handleSubmit}>
+          <InputGroup>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </InputGroup>
+          <InputGroup>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </InputGroup>
+          <Button type="submit">Login</Button>
+        </form>
+        <FooterText>
+          Don't have an account? <Link to="/register">Sign up</Link>
+        </FooterText>
+      </FormWrapper>
+    </Container>
+  );
 };
 
 export default Login;

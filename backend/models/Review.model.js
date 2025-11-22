@@ -9,20 +9,12 @@ const Review = sequelize.define('Review', {
     },
     userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: 'Users',
-            key: 'id'
-        }
+        allowNull: false
     },
     bookingId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
-        references: {
-            model: 'Bookings',
-            key: 'id'
-        }
+        unique: true
     },
     rating: {
         type: DataTypes.INTEGER,
@@ -35,6 +27,10 @@ const Review = sequelize.define('Review', {
     comment: {
         type: DataTypes.TEXT,
         allowNull: true
+    },
+    isApproved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     }
 }, {
     timestamps: true
