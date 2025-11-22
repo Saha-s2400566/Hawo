@@ -1,138 +1,134 @@
-import styled from 'styled-components';
-
-const Container = styled.div`
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const Header = styled.div`
-  text-align: center;
-  margin-bottom: 3rem;
-`;
-
-const Title = styled.h1`
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 1rem;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-`;
-
-const Card = styled.div`
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-`;
-
-const Content = styled.div`
-  padding: 1.5rem;
-`;
-
-const ServiceTitle = styled.h3`
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-`;
-
-const Price = styled.span`
-  color: #007bff;
-  font-weight: bold;
-  font-size: 1.1rem;
-`;
-
-const Description = styled.p`
-  color: #666;
-  margin: 1rem 0;
-  line-height: 1.5;
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 0.75rem;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background 0.2s;
-
-  &:hover {
-    background: #000;
-  }
-`;
+import { useState, useEffect } from 'react';
+import ServiceCard from '../components/ServiceCard';
+import BookingModal from '../components/BookingModal';
 
 const Services = () => {
-    const services = [
-        {
-            id: 1,
-            name: 'Hair Styling',
-            price: '$50',
-            description: 'Professional hair styling services for all hair types. Includes wash, cut, and style.',
-            image: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1469&q=80'
-        },
-        {
-            id: 2,
-            name: 'Facial Treatment',
-            price: '$80',
-            description: 'Rejuvenating facial treatments to cleanse, exfoliate, and nourish your skin.',
-            image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'
-        },
-        {
-            id: 3,
-            name: 'Massage Therapy',
-            price: '$100',
-            description: 'Relaxing full-body massage to relieve stress and muscle tension.',
-            image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'
-        },
-        {
-            id: 4,
-            name: 'Manicure & Pedicure',
-            price: '$45',
-            description: 'Complete nail care services including shaping, cuticle care, and polish.',
-            image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'
-        }
-    ];
+  const [services, setServices] = useState([]);
+  const [selectedService, setSelectedService] = useState(null);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-    return (
-        <Container>
-            <Header>
-                <Title>Our Services</Title>
-                <p>Discover our premium beauty and wellness treatments</p>
-            </Header>
-            <Grid>
-                {services.map(service => (
-                    <Card key={service.id}>
-                        <Image src={service.image} alt={service.name} />
-                        <Content>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <ServiceTitle>{service.name}</ServiceTitle>
-                                <Price>{service.price}</Price>
-                            </div>
-                            <Description>{service.description}</Description>
-                            <Button>Book Now</Button>
-                        </Content>
-                    </Card>
-                ))}
-            </Grid>
-        </Container>
-    );
+  useEffect(() => {
+    // Mock data for full services list
+    setServices([
+      {
+        id: 1,
+        name: 'Signature Facial',
+        price: 120,
+        duration: 60,
+        description: 'Our signature treatment combining deep cleansing, exfoliation, and a custom mask.',
+        imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
+        category: 'Face'
+      },
+      {
+        id: 2,
+        name: 'Aromatherapy Massage',
+        price: 95,
+        duration: 60,
+        description: 'Relax your mind and body with essential oils and gentle massage techniques.',
+        imageUrl: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
+        category: 'Body'
+      },
+      {
+        id: 3,
+        name: 'Luxury Manicure',
+        price: 55,
+        duration: 45,
+        description: 'Complete nail care including shaping, cuticle work, and premium polish.',
+        imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
+        category: 'Nails'
+      },
+      {
+        id: 4,
+        name: 'Deep Tissue Massage',
+        price: 110,
+        duration: 60,
+        description: 'Intense massage therapy targeting deep muscle layers to release chronic tension.',
+        imageUrl: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
+        category: 'Body'
+      },
+      {
+        id: 5,
+        name: 'Hair Styling & Cut',
+        price: 85,
+        duration: 60,
+        description: 'Professional consultation, wash, cut, and blow-dry styling.',
+        imageUrl: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?ixlib=rb-4.0.3&auto=format&fit=crop&w=1469&q=80',
+        category: 'Hair'
+      },
+      {
+        id: 6,
+        name: 'Hydrating Facial',
+        price: 100,
+        duration: 50,
+        description: 'Intense hydration treatment for dry and dehydrated skin.',
+        imageUrl: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
+        category: 'Face'
+      }
+    ]);
+  }, []);
+
+  const handleBook = (service) => {
+    setSelectedService(service);
+    setIsBookingOpen(true);
+  };
+
+  const categories = ['All', ...new Set(services.map(s => s.category))];
+  const [activeCategory, setActiveCategory] = useState('All');
+
+  const filteredServices = activeCategory === 'All'
+    ? services
+    : services.filter(s => s.category === activeCategory);
+
+  return (
+    <div className="pt-20 min-h-screen bg-glow-white">
+      <div className="bg-glow-beige/30 py-16 mb-12">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-4">Our Menu</h1>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Explore our curated selection of premium treatments designed to enhance your natural beauty and well-being.
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
+                  ? 'bg-glow-orange text-white shadow-glow-orange'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredServices.map(service => (
+            <ServiceCard
+              key={service.id}
+              service={service}
+              onBook={handleBook}
+            />
+          ))}
+        </div>
+      </div>
+
+      <BookingModal
+        isOpen={isBookingOpen}
+        onClose={() => setIsBookingOpen(false)}
+        service={selectedService}
+        staffList={[
+          { id: 1, name: 'Sarah Johnson', specialization: 'Facialist', imageUrl: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1469&q=80' },
+          { id: 2, name: 'Michael Chen', specialization: 'Massage Therapist', imageUrl: 'https://images.unsplash.com/photo-1618077360395-f3068be8e001?ixlib=rb-4.0.3&auto=format&fit=crop&w=1480&q=80' }
+        ]}
+      />
+    </div>
+  );
 };
 
 export default Services;
